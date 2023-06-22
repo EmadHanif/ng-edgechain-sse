@@ -25,7 +25,7 @@ export class PineconeChatComponent implements OnInit {
 
   onPineconeChat() {
 
-    const contextId = "historycontext-0daa4590-49b4-4a73-b69e-d0229d7364ab";
+    const contextId = "historycontext-4d07afa1-73c3-4778-830a-3384938a00c0";
     const path = `${environment.serverPath}/v1/sse/pinecone/openai/query/context/${contextId}?query=${this.input}`
 
     this.output = "";

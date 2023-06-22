@@ -25,7 +25,7 @@ export class RedisChatComponent implements OnInit {
 
   onRedisChat() {
 
-    const contextId = "historycontext-c79e8f47-88c0-45ae-ac29-00b19c3d08db";
+    const contextId = "historycontext-1152d0d2-525a-4bcf-a7cb-873798426d09";
     const path = `${environment.serverPath}/v1/sse/redis/openai/query/context/${contextId}?query=${this.input}`
 
     this.output = "";
