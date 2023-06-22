@@ -1,0 +1,8 @@
+<h3>Example 4: Query + Embeddings + Redis Similarity Search + OpenAI Chat Completion </h3>
+<br>
+<button (click)="onRedisQuery()">Get Redis Queries</button>
+<br><br>
+<div *ngFor="let q of chainResponse; let i = index">
+  {{i + 1}} -  {{q?.response}}
+  <br>
+</div>

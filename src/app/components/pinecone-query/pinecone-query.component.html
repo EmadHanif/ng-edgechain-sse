@@ -1,0 +1,8 @@
+<h3>Example 2: Query + Embeddings + Similarity Search + OpenAI Chat Completion </h3>
+<br>
+<button (click)="onPineconeQuery()">Get Pinecone Queries</button>
+<br><br>
+<div *ngFor="let q of chainResponse; let i = index">
+  {{i + 1}} -  {{q?.response}}
+  <br>
+</div>
