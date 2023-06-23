@@ -24,9 +24,9 @@ export class PineconeChatComponent implements OnInit {
   }
 
   onPineconeChat() {
-
-    const contextId = "historycontext-4d07afa1-73c3-4778-830a-3384938a00c0";
-    const path = `${environment.serverPath}/v1/sse/pinecone/openai/query/context/${contextId}?query=${this.input}`
+    const contextId = "historycontext-6916fd36-6e56-4af8-8387-50b96479dfad";
+    const topK = 7;
+    const path = `${environment.serverPath}/v1/pinecone/openai/query/context?contextId=${contextId}&topK=${topK}&stream=true&query=${this.input}`
 
     this.output = "";
     const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'})
