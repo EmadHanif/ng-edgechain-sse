@@ -21,8 +21,7 @@ export class RedisQueryComponent implements OnInit {
 
     const topK:number = 10;
     const query:string = "What is the collect stage for data maturity?"
-
-    const path = `${environment.serverPath}/v1/sse/redis/openai/query/${topK}?query=${query}`;
+    const path = `${environment.serverPath}/v1/redis/openai/query?topK=${topK}&stream=true&query=${query}`;
     this.sseClient.stream(path, {keepAlive: false,  responseType: 'text'})
       .subscribe((event) => {
         console.log(event)
