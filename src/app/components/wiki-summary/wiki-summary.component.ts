@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {SseClient} from 'ngx-sse-client';
-import {ChainResponseModel} from '../../models/chain-response.model';
 import {environment} from '../../../environments/environment';
 import {HttpHeaders} from '@angular/common/http';
 import {AppConst} from '../../constants/app.const';
 import {Subscription} from 'rxjs';
+import {ChatCompletionModel} from '../../models/chat-completion.model';
 
 @Component({
   selector: 'app-wiki-summary',
@@ -24,15 +24,19 @@ export class WikiSummaryComponent implements OnInit {
 
   onWikiSummary(){
     const input = "Barack Obama";
-    const path = `${environment.serverPath}/v1/sse/wiki/summary?query=${input}`
+    const path = `${environment.serverPath}/v1/examples/wiki-summary?query=${input}`
 
     this.output =  "";
-    const subscription:Subscription = this.sseClient.stream(path, { keepAlive: false, responseType: 'text' })
+
+    const headers = new HttpHeaders().set('Content-Type', `application/json`).set("stream","true");
+
+
+    const subscription:Subscription = this.sseClient.stream(path, { keepAlive: false, responseType: 'text' }, {headers})
       .subscribe((event) => {
         console.log(event)
-        const chatResponse = new ChainResponseModel(JSON.parse(event));
-        if(chatResponse.response === AppConst.CHAT_STREAM_EVENT_COMPLETION_MESSAGE) subscription.unsubscribe();
-        else this.output = this.output.concat(chatResponse.response);
+        const chatResponse = new ChatCompletionModel(JSON.parse(event));
+        if(chatResponse.choices[0].finish_reason !== undefined) subscription.unsubscribe();
+        else this.output = this.output.concat(chatResponse.choices[0].message.content );
       });
 
 

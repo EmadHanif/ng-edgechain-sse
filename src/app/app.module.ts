@@ -10,6 +10,7 @@ import { PineconeChatComponent } from './components/pinecone-chat/pinecone-chat.
 import {FormsModule} from '@angular/forms';
 import { RedisChatComponent } from './components/redis-chat/redis-chat.component';
 import { RedisQueryComponent } from './components/redis-query/redis-query.component';
+import { PostgresChatComponent } from './components/postgres-chat/postgres-chat.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { RedisQueryComponent } from './components/redis-query/redis-query.compon
     PineconeQueryComponent,
     PineconeChatComponent,
     RedisChatComponent,
-    RedisQueryComponent
+    RedisQueryComponent,
+    PostgresChatComponent
   ],
   imports: [
     BrowserModule,

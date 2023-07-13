@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {SseClient} from 'ngx-sse-client';
 import {environment} from '../../../environments/environment';
-import {ChainResponseModel} from '../../models/chain-response.model';
+import {ChatCompletionModel} from '../../models/chat-completion.model';
+import {HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-pinecone-query',
@@ -10,7 +11,7 @@ import {ChainResponseModel} from '../../models/chain-response.model';
 })
 export class PineconeQueryComponent implements OnInit {
 
-  chainResponse: ChainResponseModel[] = [];
+  chatCompletion: ChatCompletionModel[] = [];
 
   constructor(private sseClient: SseClient) {}
 
@@ -19,13 +20,16 @@ export class PineconeQueryComponent implements OnInit {
 
   onPineconeQuery() {
     const topK:number = 10;
-    const query:string = "What is the collect stage for data maturity?"
-    const path = `${environment.serverPath}/v1/pinecone/openai/query?topK=${topK}&stream=true&query=${query}`;
-    this.sseClient.stream(path, {keepAlive: false,  responseType: 'text'})
+    const input: string = "What is the collect stage for dataset?"
+
+    const path = `${environment.serverPath}/v1/examples/pinecone/openai/query?topK=${topK}&input=${input}&namespace=machine-learning`;
+    const headers = new HttpHeaders().set('Content-Type', `application/json`).set("stream","true");
+
+    this.sseClient.stream(path, {keepAlive: false,  responseType: 'text'}, {headers})
       .subscribe((event) => {
         console.log(event)
-        const chatResponse = new ChainResponseModel(JSON.parse(event));
-        this.chainResponse.push(chatResponse);
+        const chatResponse = new ChatCompletionModel(JSON.parse(event));
+        this.chatCompletion.push(chatResponse);
       });
   }
 

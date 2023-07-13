@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {SseClient} from 'ngx-sse-client';
 import {environment} from '../../../environments/environment';
 import {Subscription} from 'rxjs';
-import {ChainResponseModel} from '../../models/chain-response.model';
 import {AppConst} from '../../constants/app.const';
+import {HttpHeaders} from '@angular/common/http';
+import {ChatCompletionModel} from '../../models/chat-completion.model';
 
 @Component({
   selector: 'app-redis-chat',
@@ -24,20 +25,23 @@ export class RedisChatComponent implements OnInit {
   }
 
   onRedisChat() {
-    const contextId = "historycontext-6916fd36-6e56-4af8-8387-50b96479dfad";
-    const topK = 7;
-    const path = `${environment.serverPath}/v1/redis/openai/query/context?contextId=${contextId}&topK=${topK}&stream=true&query=${this.input}`
+    const contextId = "historycontext:5d2ff109-5ede-43e9-b415-7d19c45ca2d5";
+    const namespace = "machine-learning";
+
+    const headers = new HttpHeaders().set('Content-Type', `application/json`).set("stream","true");
+
+    // localhost:8080/v1/examples/redis/openai/chat?query=So, can you explain the difference between neural network and data science?&namespace=machine-learning&contextId=historycontext-06c48266-2233-4376-b586-052604e478d2
+
+    const path = `${environment.serverPath}/v1/examples/redis/openai/chat?query=${this.input}&namespace=${namespace}&id=${contextId}`
 
     this.output = "";
-    const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'})
+    const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'}, {headers})
       .subscribe((event) => {
         // console.log(event)
-        const chatResponse = new ChainResponseModel(JSON.parse(event));
-
-        if(chatResponse.response === AppConst.CHAT_STREAM_EVENT_COMPLETION_MESSAGE) subscription.unsubscribe();
-        else this.output = this.output.concat(chatResponse.response);
-
-        console.log(chatResponse.response);
+        console.log(event)
+        const chatResponse = new ChatCompletionModel(JSON.parse(event));
+        if(chatResponse.choices[0].finish_reason !== undefined) subscription.unsubscribe();
+        else this.output = this.output.concat(chatResponse.choices[0].message.content );
 
       }, error =>  {console.log(error)}, () => {console.log("Hello World")});
 

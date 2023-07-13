@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import {SseClient} from 'ngx-sse-client';
+import {HttpHeaders} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
 import {Subscription} from 'rxjs';
-import {AppConst} from '../../constants/app.const';
-import {HttpHeaders} from '@angular/common/http';
 import {ChatCompletionModel} from '../../models/chat-completion.model';
 
 @Component({
-  selector: 'app-pinecone-chat',
-  templateUrl: './pinecone-chat.component.html',
-  styleUrls: ['./pinecone-chat.component.css']
+  selector: 'app-postgres-chat',
+  templateUrl: './postgres-chat.component.html',
+  styleUrls: ['./postgres-chat.component.css']
 })
-export class PineconeChatComponent implements OnInit {
-
+export class PostgresChatComponent implements OnInit {
   input:string;
 
   output: string = "";
@@ -24,16 +22,14 @@ export class PineconeChatComponent implements OnInit {
   ngOnInit() {
   }
 
-  onPineconeChat() {
+  onPostgresChat() {
 
     const contextId = "historycontext:5d2ff109-5ede-43e9-b415-7d19c45ca2d5";
-    const namespace = "machine-learning";
+    const table = "spring_vectors";
 
     const headers = new HttpHeaders().set('Content-Type', `application/json`).set("stream","true");
 
-    // localhost:8080/v1/examples/pinecone/openai/chat?query=So, can you explain the difference between neural network and data science?&namespace=machine-learning&contextId=historycontext-06c48266-2233-4376-b586-052604e478d2
-
-    const path = `${environment.serverPath}/v1/examples/pinecone/openai/chat?query=${this.input}&namespace=${namespace}&id=${contextId}`
+    const path = `${environment.serverPath}/v1/examples/postgres/openai/chat?query=${this.input}&table=${table}&id=${contextId}`
 
     this.output = "";
     const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'}, {headers})

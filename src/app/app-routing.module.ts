@@ -5,6 +5,7 @@ import {PineconeQueryComponent} from './components/pinecone-query/pinecone-query
 import {PineconeChatComponent} from './components/pinecone-chat/pinecone-chat.component';
 import {RedisChatComponent} from './components/redis-chat/redis-chat.component';
 import {RedisQueryComponent} from './components/redis-query/redis-query.component';
+import {PostgresChatComponent} from './components/postgres-chat/postgres-chat.component';
 
 const routes: Routes = [
 
@@ -13,7 +14,8 @@ const routes: Routes = [
   {path: "pinecone-query", component: PineconeQueryComponent},
   {path: "pinecone-chat", component: PineconeChatComponent},
   {path: "redis-query", component: RedisQueryComponent},
-  {path: "redis-chat", component: RedisChatComponent}
+  {path: "redis-chat", component: RedisChatComponent},
+  {path: "postgres-chat", component: PostgresChatComponent}
 ]
 
 @NgModule({
