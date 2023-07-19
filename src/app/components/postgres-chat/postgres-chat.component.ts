@@ -24,15 +24,20 @@ export class PostgresChatComponent implements OnInit {
 
   onPostgresChat() {
 
-    const contextId = "historycontext:5d2ff109-5ede-43e9-b415-7d19c45ca2d5";
+    const contextId = "historycontext:e350042b-d12b-4cb8-b072-51b854402ab3";
+    const namespace = "machine-learning";
     const table = "spring_vectors";
 
     const headers = new HttpHeaders().set('Content-Type', `application/json`).set("stream","true");
 
-    const path = `${environment.serverPath}/v1/examples/postgres/openai/chat?query=${this.input}&table=${table}&id=${contextId}`
+    const body = {
+      "query": this.input
+    }
+
+    const path = `${environment.serverPath}/v1/examples/postgres/openai/chat?table=${table}&id=${contextId}&namespace=${namespace}`
 
     this.output = "";
-    const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'}, {headers})
+    const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'}, {headers,body}, "POST")
       .subscribe((event) => {
         // console.log(event)
         console.log(event)

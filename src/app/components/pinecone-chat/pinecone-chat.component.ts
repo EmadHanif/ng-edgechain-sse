@@ -26,17 +26,19 @@ export class PineconeChatComponent implements OnInit {
 
   onPineconeChat() {
 
-    const contextId = "historycontext:5d2ff109-5ede-43e9-b415-7d19c45ca2d5";
+    const contextId = "historycontext:49a4ffae-9832-4f4c-abe5-35ac00b6c114";
     const namespace = "machine-learning";
 
     const headers = new HttpHeaders().set('Content-Type', `application/json`).set("stream","true");
 
-    // localhost:8080/v1/examples/pinecone/openai/chat?query=So, can you explain the difference between neural network and data science?&namespace=machine-learning&contextId=historycontext-06c48266-2233-4376-b586-052604e478d2
+    const body = {
+      "query": this.input
+    }
 
-    const path = `${environment.serverPath}/v1/examples/pinecone/openai/chat?query=${this.input}&namespace=${namespace}&id=${contextId}`
+    const path = `${environment.serverPath}/v1/examples/pinecone/openai/chat?namespace=${namespace}&id=${contextId}`
 
     this.output = "";
-    const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'}, {headers})
+    const subscription: Subscription = this.sseClient.stream(path, {keepAlive: false, responseType: 'text'}, {headers,body})
       .subscribe((event) => {
         // console.log(event)
         console.log(event)
